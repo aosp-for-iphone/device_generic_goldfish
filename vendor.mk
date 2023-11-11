@@ -17,12 +17,12 @@
 # This file is to configure vendor/data partitions of emulator-related products
 #
 
+BOARD_HAVE_BLUETOOTH := true
+
 # Device modules
 PRODUCT_PACKAGES += \
     vulkan.ranchu \
-    gralloc.goldfish \
     gralloc.goldfish.default \
-    gralloc.ranchu \
     libGLESv1_CM_emulation \
     lib_renderControl_enc \
     libEGL_emulation \
@@ -45,8 +45,7 @@ PRODUCT_PACKAGES += \
     gps.goldfish \
     gps.ranchu \
     fingerprint.goldfish \
-    audio.primary.goldfish \
-    audio.primary.goldfish_legacy \
+    audio.primary.default \
     power.goldfish \
     power.ranchu \
     fingerprint.ranchu \
@@ -60,13 +59,25 @@ PRODUCT_PACKAGES += \
     hwcomposer.ranchu \
     toybox_vendor \
     android.hardware.audio@2.0-service \
-    android.hardware.wifi@1.0-service \
     android.hardware.biometrics.fingerprint@2.1-service \
+    android.hardware.bluetooth@1.0-service.btlinux \
+    android.hardware.bluetooth.audio@2.0-impl \
+    android.hardware.usb@1.0-service.ranchu \
     sh_vendor \
     iw_vendor \
     audio.r_submix.default \
     local_time.default \
-    SdkSetup
+    SdkSetup \
+    hx-touchd \
+    syscfg \
+    hcdpack \
+    openlauncher \
+    Launcher3QuickStepNoLaunch \
+    signal
+
+PRODUCT_PACKAGES += memtrack.ranchu \
+    android.hardware.memtrack@1.0-service \
+    android.hardware.memtrack@1.0-impl
 
 PRODUCT_PACKAGES += \
     android.hardware.audio@4.0-impl:32 \
@@ -91,6 +102,10 @@ PRODUCT_PACKAGES += \
     android.hardware.gnss@1.0-impl
 endif
 
+PRODUCT_PACKAGES += \
+    lights.ranchu \
+    android.hardware.light@2.0-impl \
+    android.hardware.light@2.0-service
 
 PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-impl \
@@ -107,8 +122,13 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PROPERTY_OVERRIDES += ro.control_privapp_permissions=enforce
 PRODUCT_PROPERTY_OVERRIDES += ro.hardware.power=ranchu
+PRODUCT_PROPERTY_OVERRIDES += ro.sf.lcd_density=326
+PRODUCT_PROPERTY_OVERRIDES += ro.radio.noril=true
+PRODUCT_PROPERTY_OVERRIDES += qemu.hw.mainkeys=0
 
 PRODUCT_PROPERTY_OVERRIDES += persist.sys.zram_enabled=1 \
+
+PRODUCT_DISABLE_SCUDO := true
 
 PRODUCT_PACKAGES += \
     camera.device@1.0-impl \
@@ -118,18 +138,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0-impl \
     android.hardware.gatekeeper@1.0-service
-
-# WiFi: vendor side
-PRODUCT_PACKAGES += \
-	createns \
-	dhcpclient \
-	dhcpserver \
-	execns \
-	hostapd \
-	hostapd_nohidl \
-	ipv6proxy \
-	netmgr \
-	wpa_supplicant \
 
 PRODUCT_PACKAGES += android.hardware.thermal@2.0-service.mock
 
@@ -146,20 +154,21 @@ PRODUCT_COPY_FILES += \
     device/generic/goldfish/fstab.ranchu.initrd:$(TARGET_COPY_OUT_RAMDISK)/fstab.ranchu \
     device/generic/goldfish/data/etc/apns-conf.xml:data/misc/apns/apns-conf.xml \
     device/generic/goldfish/data/etc/local.prop:data/local.prop \
+    device/generic/goldfish/init.hardware.usb.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.ranchu.usb.rc \
     device/generic/goldfish/init.ranchu-core.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.ranchu-core.sh \
     device/generic/goldfish/init.ranchu-net.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.ranchu-net.sh \
-    device/generic/goldfish/wifi/init.wifi.sh:$(TARGET_COPY_OUT_VENDOR)/bin/init.wifi.sh \
     device/generic/goldfish/init.ranchu.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.ranchu.rc \
     device/generic/goldfish/fstab.ranchu:$(TARGET_COPY_OUT_VENDOR)/etc/fstab.ranchu \
     device/generic/goldfish/ueventd.ranchu.rc:$(TARGET_COPY_OUT_VENDOR)/ueventd.rc \
     device/generic/goldfish/input/goldfish_rotary.idc:$(TARGET_COPY_OUT_VENDOR)/usr/idc/goldfish_rotary.idc \
     device/generic/goldfish/manifest.xml:$(TARGET_COPY_OUT_VENDOR)/manifest.xml \
     device/generic/goldfish/data/etc/config.ini:config.ini \
-    device/generic/goldfish/wifi/simulated_hostapd.conf:$(TARGET_COPY_OUT_VENDOR)/etc/simulated_hostapd.conf \
     device/generic/goldfish/wifi/wpa_supplicant.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant.conf \
-    device/generic/goldfish/wifi/WifiConfigStore.xml:data/misc/wifi/WifiConfigStore.xml \
     frameworks/native/data/etc/android.hardware.wifi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.xml \
     frameworks/native/data/etc/android.hardware.wifi.direct.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.direct.xml \
+    frameworks/native/data/etc/android.hardware.bluetooth.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth.xml \
+    frameworks/native/data/etc/android.hardware.bluetooth_le.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth_le.xml \
+    frameworks/native/data/etc/android.hardware.usb.accessory.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.usb.accessory.xml \
     device/generic/goldfish/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml \
     device/generic/goldfish/camera/media_profiles.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_V1_0.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
@@ -182,3 +191,17 @@ PRODUCT_COPY_FILES += \
     frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml \
     frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
     frameworks/av/services/audiopolicy/config/surround_sound_configuration_5_0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/surround_sound_configuration_5_0.xml \
+    device/generic/goldfish/hx-touch/hx-touch.fwlist:$(TARGET_COPY_OUT_VENDOR)/etc/hw/hx-touch.fwlist \
+
+# WLAN driver configuration files
+PRODUCT_COPY_FILES += \
+    device/generic/goldfish/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf     \
+    device/generic/goldfish/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf     \
+
+# Wi-Fi
+PRODUCT_PACKAGES += \
+    android.hardware.wifi@1.0-service \
+    libwpa_client \
+    hostapd \
+    wificond \
+    wpa_supplicant

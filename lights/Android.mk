@@ -17,12 +17,13 @@ LOCAL_PATH := $(call my-dir)
 # HAL module implemenation, not prelinked and stored in
 # hw/<LIGHTS_HARDWARE_MODULE_ID>.<ro.hardware>.so
 include $(CLEAR_VARS)
-LOCAL_RENDOR_MODULE := true
+LOCAL_VENDOR_MODULE := true
 LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_SHARED_LIBRARIES := liblog libcutils
-LOCAL_C_INC := lights_qemu.c
+LOCAL_C_INC := lights_hw.c
+LOCAL_HEADER_LIBRARIES := libhardware_headers
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../include
-LOCAL_SRC_FILES := lights_qemu.c
+LOCAL_SRC_FILES := lights_hw.c
 LOCAL_MODULE := lights.ranchu
 LOCAL_CFLAGS += -DLIGHT_BACKLIGHT
 include $(BUILD_SHARED_LIBRARY)
