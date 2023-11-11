@@ -58,3 +58,9 @@
 /data/vendor/mediadrm(/.*)?            u:object_r:mediadrm_vendor_data_file:s0
 /data/vendor/var/run(/.*)?             u:object_r:varrun_file:s0
 
+# hx-touch
+/dev/hx-touch                          u:object_r:hx_touch_device:s0
+/vendor/bin/hw/hx-touchd               u:object_r:hx_touch_exec:s0
+/dev/block/nvme0n3                     u:object_r:syscfg_block_device:s0
+/apfs(/.*)?                            u:object_r:rootfs:s0
+/hostfs(/.*)?                          u:object_r:rootfs:s0

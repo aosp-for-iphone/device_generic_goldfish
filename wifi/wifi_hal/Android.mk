@@ -38,7 +38,7 @@ LOCAL_SHARED_LIBRARIES += \
 LOCAL_HEADER_LIBRARIES += \
 	libcutils_headers \
 
-LOCAL_MODULE := libwifi-hal-emu
+LOCAL_MODULE := libwifi-hal-brcmfmac
 LOCAL_PROPRIETARY_MODULE := true
 
 include $(BUILD_STATIC_LIBRARY)

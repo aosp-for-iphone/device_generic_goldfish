@@ -18,13 +18,12 @@
 -->
 
 <resources>
-    <bool name="def_lockscreen_disabled">true</bool>
+    <bool name="def_lockscreen_disabled">false</bool>
     <bool name="def_wifi_on">true</bool>
     <!-- Allow scanning even if WiFi is disabled -->
-    <integer name="def_wifi_scan_always_available">1</integer>
+    <integer name="def_wifi_scan_always_available">0</integer>
 
-    <!-- maximize the timeout to INT_MAX about 500+ hours -->
-    <integer name="def_screen_off_timeout">2147483647</integer>
+    <integer name="def_screen_off_timeout">30000</integer>
 
     <!-- Allow users to use both the on-screen keyboard, as well as a real
          keyboard -->
